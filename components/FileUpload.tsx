@@ -1,13 +1,24 @@
-'use client'
+// 'use client'
+import { uploadtoS3 } from "@/lib/s3"
 import { Inbox } from "lucide-react"
 import {useDropzone } from "react-dropzone"
 
-export default function FileUpload() {
+export default  function FileUpload() {
     const { getRootProps, getInputProps } = useDropzone({
         accept: { "application/pdf": [".pdf",".json",".txt"] },
         maxFiles: 1,
-        onDrop:(acceptedFiles)=>{
+        onDrop:async(acceptedFiles)=>{
             console.log(acceptedFiles)
+            const file = acceptedFiles[0]
+            if(file.size > 10*1024*1024){
+                alert('Please Upload a smaller file than 10Mb')
+                return
+            }
+            try{
+                const data =await uploadtoS3(file)
+            }catch(e){
+                console.log(e);
+            }
         }
     })
     return (
