@@ -40,7 +40,8 @@ export default  function FileUpload() {
                 }
                 mutate(data, {
                   onSuccess:(data)=>{
-                    toast.success(data.message)
+                    console.log(data)
+                    // toast.success(data.message)
                   },onError:()=>{
                     toast.error("Error creating Chat")
                     
@@ -63,9 +64,8 @@ export default  function FileUpload() {
           >
             <input {...getInputProps()} />
                 {(isPending || uploading)?(<>
-                  <Loader2 className="h-10 w-10 text-blue-500 animate-spin">
+                  <Loader2 className="h-10 w-10 text-blue-500 animate-spin"/>
                     <p className="mt-2  text-sm text-slate-400">Sending Files to GPT....</p>
-                  </Loader2>
                 </>):(
               <>
                   <Inbox className="w-10 h-10 text-blue-500" />

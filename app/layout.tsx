@@ -34,8 +34,8 @@ export default function RootLayout({
             <TopBar /> 
             {children}
           </body>
-          <Toaster/>
         </html>
+          <Toaster/>
       </Provider>
     </ClerkProvider>
   )
