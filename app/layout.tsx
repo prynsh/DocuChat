@@ -3,6 +3,8 @@ import { ClerkProvider } from '@clerk/nextjs'
 import { Geist, Geist_Mono } from 'next/font/google'
 import './globals.css'
 import TopBar from '@/components/Topbar'
+import Provider from '@/components/Provider'
+import {Toaster} from "react-hot-toast"
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -26,12 +28,15 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <html lang="en">
-        <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-          <TopBar /> 
-          {children}
-        </body>
-      </html>
+      <Provider>
+        <html lang="en">
+          <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+            <TopBar /> 
+            {children}
+          </body>
+          <Toaster/>
+        </html>
+      </Provider>
     </ClerkProvider>
   )
 }
