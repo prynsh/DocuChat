@@ -1,24 +1,24 @@
 import { google } from '@ai-sdk/google';
-import { generateText } from 'ai';
+import { streamText } from 'ai';
 
 export async function POST(req: Request) {
     try {
       const { messages } = await req.json();
   
-      // Initialize the Google Generative AI model
       const model = google('gemini-1.5-pro-latest',{
       });
   
-      // Stream the text response
-      const result = await generateText({
+      const result = await streamText({
         model,
         messages,
       });
-      console.log(result)
-    //   return new Response(JSON.stringify(result.text))
-      return new Response(JSON.stringify({
-        messages: [...messages, { id: Date.now().toString(), role: "assistant", content: result.text }]
-    }))
+
+      return new Response(result.toDataStream(), {
+        status: 200,
+        headers: {
+            'Content-Type': 'text/event-stream', // Required for streaming
+        }
+    });
     } catch (error) {
       console.error('Error:', error);
       return new Response(JSON.stringify({ error: 'Something went wrong' }), {
