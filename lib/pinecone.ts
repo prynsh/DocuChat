@@ -37,7 +37,7 @@ export async function loadS3IntoPinecone(filekey:string) {
 
     const client = await getPineConeClient();
 
-    const pineConeIndex = client.Index('docu-chat')
+    const pineConeIndex = client.Index('docu-chat-768')
     const namespace = pineConeIndex.namespace( convertToASCII(filekey));
     console.log("inserting vectors into Pinecone")
     await namespace.upsert(vectors);
@@ -47,23 +47,44 @@ export async function loadS3IntoPinecone(filekey:string) {
 }
 
 
-async function embedDocument(doc:Document){
+// async function embedDocument(doc:Document){
+//     try {
+//         const embeddings = await getEmbeddings(doc.pageContent)
+//         const hash = md5(doc.pageContent)
+//         return {
+//              id: hash,
+//              values: embeddings,
+//              metadata:{
+//                 text: doc.metadata.text,
+//                 pageNumber : doc.metadata.pageNumber
+//              }
+//         } as PineconeRecord
+//     } catch (error) {
+//         console.log("error embedding document", error)
+//         throw error;
+//     }
+// }
+// Import the modified function
+
+async function embedDocument(doc: Document) {
     try {
-        const embeddings = await getEmbeddings(doc.pageContent)
-        const hash = md5(doc.pageContent)
+        const embeddings = await getEmbeddings(doc.pageContent);
+        const hash = md5(doc.pageContent);
+
         return {
-             id: hash,
-             values: embeddings,
-             metadata:{
+            id: hash,
+            values: embeddings,
+            metadata: {
                 text: doc.metadata.text,
-                pageNumber : doc.metadata.pageNumber
-             }
-        } as PineconeRecord
+                pageNumber: doc.metadata.pageNumber,
+            },
+        } as PineconeRecord;
     } catch (error) {
-        console.log("error embedding document", error)
+        console.error("Error embedding document", error);
         throw error;
     }
 }
+
 
 export const truncateStringByBytes=(str: string, bytes:number)=>{
     const enc = new TextEncoder()
