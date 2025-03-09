@@ -44,7 +44,7 @@ const ChatPage = async ( { params : {  chatId } }:Props) => {
 
           {/* Chat Section */}
           <div className="w-3/5 h-full border-l border-gray-300 overflow-y-auto">
-              <ChatComponent/>
+              <ChatComponent chatId={parseInt(chatId)}/>
           </div>
       </div>
   );
