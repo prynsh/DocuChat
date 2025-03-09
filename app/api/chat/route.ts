@@ -1,6 +1,6 @@
 import { getContext } from '@/lib/context';
 import { db } from '@/lib/db';
-import { chats } from '@/lib/db/schema';
+import { chats, messages as _messages } from '@/lib/db/schema';
 import { google } from '@ai-sdk/google';
 import {  streamText } from 'ai';
 import { eq } from 'drizzle-orm';
@@ -40,16 +40,27 @@ export async function POST(req: Request) {
         `,
       };
   
-      const model = google('gemini-1.5-pro-latest',{
-      });
+      const model = google('gemini-1.5-pro-latest');
+      let aiResponse = "";
   
       const result = await streamText({
         model,
-        messages:[
-            prompt, ...messages.filter((message:Message)=>message.role === 'user')
-        ],
-      });
+        messages: [prompt, ...messages.filter((message: Message) => message.role === 'user')],
+        onChunk: async (chunk) => {
+            if (chunk.chunk.type === "text-delta") {
+                aiResponse += chunk.chunk.textDelta; 
+            }
+        },
+        
+    });
 
+            // Store AI Response in DB
+            await db.insert(_messages).values({
+                chatId,
+                content: aiResponse,
+                role: "system",
+            });
+    
       return new Response(result.toDataStream(), {
         status: 200,
         headers: {
