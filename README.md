@@ -1,36 +1,73 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# DocuChat
 
-## Getting Started
+DocuChat is a document-based AI chatbot that allows users to upload PDF files, store their embeddings, and interact with them using semantic search. When a user asks a question, the system retrieves relevant document sections based on vector similarity and streams responses powered by Gemini.
 
-First, run the development server:
+## Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **User Authentication:** Secure authentication with [Clerk](https://clerk.com/).
+- **File Upload & Storage:** Upload PDFs via the dashboard, stored in Amazon S3.
+- **Embedding & Search:** PDF embeddings are stored in [Pinecone](https://www.pinecone.io/) for fast and efficient retrieval.
+- **AI Chat:** Chat with documents, retrieve relevant sections, and get responses in a streaming manner.
+- **Streaming Responses:** Answers are retrieved based on the closest vector embeddings and streamed to the UI.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Tech Stack
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Frontend:** [Next.js](https://nextjs.org/) for a modern React-based UI.
+- **Authentication:** [Clerk](https://clerk.com/) for user authentication and session management.
+- **Database:** [PostgreSQL](https://www.postgresql.org/) using [Drizzle ORM](https://orm.drizzle.team/) for structured data management.
+- **Storage:** [Amazon S3](https://aws.amazon.com/s3/) for handling document storage.
+- **Vector Search:** [Pinecone](https://www.pinecone.io/) for storing and retrieving document embeddings.
+- **Styling:** [Tailwind CSS](https://tailwindcss.com/) for a sleek, responsive design.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Installation
 
-## Learn More
+### Prerequisites
 
-To learn more about Next.js, take a look at the following resources:
+Ensure you have the following installed:
+- Node.js (LTS version recommended)
+- PostgreSQL database
+- AWS S3 bucket setup
+- Pinecone API key
+- Clerk API key
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Setup
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. Clone the repository:
+   ```sh
+   git clone https://github.com/yourusername/docuchat.git
+   cd docuchat
+   ```
 
-## Deploy on Vercel
+2. Install dependencies:
+   ```sh
+   npm install
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+3. Set up environment variables in a `.env.local` file:
+   ```env
+   NEXT_PUBLIC_CLERK_FRONTEND_API=your-clerk-frontend-api
+   NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=your-clerk-key
+   CLERK_SECRET_KEY=your-clerk-api-key
+   DATABASE_URL=your-postgres-url
+   S3_BUCKET_NAME=your-s3-bucket-name
+   S3_ACCESS_KEY=your-s3-access-key
+   S3_SECRET_KEY=your-s3-secret-key
+   PINECONE_API_KEY=your-pinecone-api-key
+   GOOGLE_GENERATIVE_AI_API_KEY=your-gemini-api-key
+   ```
+4. Run database migrations:
+   ```
+   npx drizzle-kit push
+   ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+5. Start the development server:
+   ```sh
+   npm run dev
+   ```
+
+## Usage
+
+1. Sign up or log in via Clerk.
+2. Upload a PDF document from the dashboard.
+3. The document is stored in S3, and embeddings are generated and stored in Pinecone.
+4. Start chatting with the document, and receive AI-generated responses based on semantic search.
